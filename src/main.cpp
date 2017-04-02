@@ -1,6 +1,7 @@
 
 #include <iostream>
 #include <OpenNI.h>
+#include <opencv2/highgui.hpp>
 
 #include "FaceOffConfig.h"
 
@@ -162,6 +163,9 @@ int main( int argc, char *argv[] ) {
 
 	VideoFrameRef frame;
 
+	// Create a window to display RGB feed
+	cv::namedWindow( "RGB" );
+
 	int numDepthFrames = 0;
 	int numColourFrames= 0;
 	while (!wasKeyboardHit()) {
@@ -187,6 +191,7 @@ int main( int argc, char *argv[] ) {
 
 	std::cout << std::endl;
 
+	cv::destroyWindow( "RGB" );
 
 	// Shutdown the device
 	finalizeDevice( device, depth, colour );
