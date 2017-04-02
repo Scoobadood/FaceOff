@@ -2,6 +2,7 @@
 #include <iostream>
 #include <OpenNI.h>
 #include <opencv2/highgui.hpp>
+#include <opencv2/imgproc.hpp>
 
 #include "FaceOffConfig.h"
 
@@ -139,7 +140,20 @@ int main( int argc, char *argv[] ) {
 		} 
 
 		else if ( frameType == 1 ) {
-			// Render this to screen
+			// Grab pointer to data in appropriate format
+			const RGB888Pixel* imageBuffer = (const openni::RGB888Pixel*)frame.getData();
+
+			// Create a Mat
+			cv::Mat rgbImage;
+			rgbImage.create( frame.getHeight(), frame.getWidth(), CV_8UC3 );
+			memcpy( rgbImage.data, imageBuffer, 3 * frame.getHeight()*frame.getWidth()*sizeof(uint8_t) );
+
+			// Manage BGR to RGB conversion
+			cv::cvtColor( rgbImage, rgbImage, CV_BGR2RGB);
+
+
+			// Render
+			cv::imshow( "RGB", rgbImage );
 			numColourFrames++;
 		}
 
