@@ -8,6 +8,9 @@ set (FaceOff_VERSION_MINOR 0)
 include_directories( "src")
 include_directories( "${PROJECT_BINARY_DIR}" )
 
+# Write targets to bin directory
+set( CMAKE_RUNTIME_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR}/../bin)
+
 # configure a header file to pass some of the CMake settings
 # to the source code
 configure_file (
@@ -39,3 +42,10 @@ find_library( OPENNI2 libOpenNI2.so )
 
 # Link with OpenNI libs
 target_link_libraries( FaceOff "${OPENNI2}" )
+
+
+# Copy Haar cascade data on successful build
+message( ${OpenCV_CONFIG_PATH} )
+add_custom_command( TARGET FaceOff POST_BUILD
+                    COMMAND mkdir -p $<TARGET_FILE_DIR:FaceOff>/data && cp -R ${OpenCV_CONFIG_PATH}/haarcascades/*.xml
+                   $<TARGET_FILE_DIR:FaceOff>/data )
